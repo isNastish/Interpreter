@@ -1,0 +1,50 @@
+
+//
+// grammar: 
+//
+
+// expr0 := expr1 ;
+// expr1 := expr2 + expr2 
+//        | expr2 - expr2
+//        | expr2 & expr2
+//        | expr2 | expr2
+//        | expr2 ^ expr2
+//        | expr2 << expr2
+//        | expr2 >> expr2
+//        | expr2
+// expr2 := epxr3 * expr3
+//        | expr3 / expr3
+//        | expr3 % expr3
+//        | expr3
+// expr3 := -expr4
+//        | +epxr4
+//        | expr4
+// expr4 := ( expr1 )
+//        | name
+//        | number
+
+// stmt := expr_stmt
+//       | for_stmt
+//       | while_stmt
+//       | do_stmt
+//       | if_stmt
+//       | switch_stmt
+//       | return_stmt
+//       | e
+//
+
+// for_stmt    := 'for' '(' expr? ';' expr? ';' expr?) (('{' stmt_block? '}') | ';') 
+// while_stmt  := 'while' '(' expr ')' (('{' stmt_block? '}') | ';')
+// do_while    := 'do' '{' stmt_block? '}' 'while' '(' expr ')' ';'
+// if_stmt     := 'if' '(' expr ')' (('{' stmt_block? '}') | ';')
+//                ('else' 'if' '(' expr ')' (('{' stmt_block? '}') | ';'))* 
+//                ('else' (('{' stmt_block? '}') | ';'))?
+// switch_smt  := 'switch' '(' expr ')'
+//                (('{' case_stmt* default_stmt? '}' | ';')
+// return_stmt := 'return' '(' expr ')' ';'
+
+// case_stmt   := 'case' '(' NUMBER ')' ':' '{' stmt_block? '}' ('break' ';')?
+// default_stmt := 'default' ':' '{' stmt_block? '}' ('break' ';')?
+
+// stmt_block := '{'? (expr ';')* '}'?
+
