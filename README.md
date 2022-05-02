@@ -3,3 +3,9 @@
 ## Base types
 All basic types used in the program:
 `s8, s16, s32, s64, u8, u16, u32, u64, f32, f64, b32`
+
+## Helper Macros
+Macros that used all over the place:
+- `#define global static`
+- `#define internal static`
+- `#define global_persist static`
