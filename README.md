@@ -9,3 +9,7 @@ Macros that used all over the place:
 - `#define global static`
 - `#define internal static`
 - `#define global_persist static`
+- `#define Max(a, b) ((a) > (b) ? (a) : (b))`
+- `#define Min(a, b) ((a) < (b) ? (a) : (b))`
+- `#define SizeOf(item) ((char *)(&item + 1) - (char *)(&item))`
+- `#define OffsetOf(type, member) ((mem_index)(&((type *)0)->member))`
