@@ -14,6 +14,12 @@ Macros that used all over the place:
 - `#define SizeOf(item) ((char *)(&item + 1) - (char *)(&item))`
 - `#define OffsetOf(type, member) ((mem_index)(&((type *)0)->member))`
 
+Macros for dynamic array:
+- `#define darr_len(array) DynamicArray__len(array)`
+- `#define darr_cap(array) DynamicArray__cap(array)`
+- `#define darr_push(array, item) DynamicArray__push(array, item)`
+- `#define darr_free(array) DynamicArray__free(array)`
+
 Macros used for testing:
 ``` C
 #define dotest(stream, result)\
@@ -22,4 +28,22 @@ Macros used for testing:
      
 #define Match(match)\
      Assert((token = eattoken(&lexer)).kind == match)
+```
+
+## Data Structures
+Lexer data structure holds information about source file being scanned, lexer state, line/column numbers, current token and lookahead token and other data:
+``` C
+typedef struct Lexer{
+    String source;    // name of the file being scanned.
+    String contents;  // contents of the file being scanned.
+    char at[2];       // parse point, at[0] is the current position in the file, and at[1] is lookahead character.
+    u32 lastline;     // current line in the source file where the parse point is.
+    u32 lastcolumn;   // current column int he source file where the parse point is.
+    Token token;      // current token.
+    Token lookahead;  // lookahead token, we can use the same technique as at[2].
+    Token *tokenbuf;  // STUDY: Do I really need it? buffer of all tokens corresponding to the current source excluding whitespaces.
+    LexerState state; // we need this as a flag to recognize some Ambiguous tokens.
+    s32 flag;         // additional information for the state.
+    s32 error;        // error code
+}Lexer;
 ```
