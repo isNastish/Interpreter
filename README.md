@@ -31,7 +31,23 @@ Macros used for testing:
 ```
 
 ## Data Structures
-Lexer data structure holds information about source file being scanned, lexer state, line/column numbers, current token and lookahead token and other data:
+Token struct holds information like token-kind, token-subkind, lexeme, and union to store the value of number:
+``` C
+typedef struct Token{
+    TokenKind kind;     // base token kind.
+    TokenSubKind skind; // token sub kind.
+    String lexeme;      // just for print, because we have an intern.
+    u32 linenumber;
+    u32 columnnumber;
+    union{
+        u64 U64;
+        f64 F64;
+        String intern;
+    }u;
+}Token;
+```
+
+Lexer struct holds information about source file being scanned, lexer state, line/column numbers, current token and lookahead token and other data:
 ``` C
 typedef struct Lexer{
     String source;    // name of the file being scanned.
