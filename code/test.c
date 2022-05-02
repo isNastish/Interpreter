@@ -193,61 +193,6 @@ b32 test_parse_expr(void){
     dotest((20 | 5) ^ (5 & 15);, 16);
     dotest(1 + 2 * 3 & 5;, 5);
     
-    /*
-    dotest(int var0 = 2;, 2);
-    dotest(char var1 = 4;, 4);
-    dotest(short var2 = 6;
-           long var3  = var1 + var2;, 10);
-    dotest((9 / 3) + (-5 * 4);, -17);
-    dotest(1 + 2 + 3*4 - 20 + -5 * (6 + 4) - -2 + +4;, -49);
-    dotest(a = 12;
-           int b = 5;
-           a = a + b;
-           signed c = a + b - 2;, 20);
-    dotest(c = c + a - b * a;, -48);
-    dotest(long d = c - a;
-           d += c;, -113);
-    
-    lexer = init_stream("int A = 12 + 5, B = 7 * 2;");
-    Assert(parse_expression(&lexer) == 14); // compares the result of the last assignment.
-    
-    lexer = init_stream("int C = 5 + 4, D = C;");
-    Assert(parse_expression(&lexer) == 9);
-    
-    dotest(a ^= 5;, 20);
-    dotest(a &= 4;, 4);
-    dotest(a |= 8;, 12);
-    dotest(a <<= 1;, 24);
-    dotest(a >>= 2;, 6);
-    dotest(a = a + 2 ^ 10;, 2);
-    dotest(a = a + 5 ^ (1 << 2);, 3);
-    dotest(b = 8;, 8); // reassign the value of b.
-    dotest(a |= b;, 11);
-    dotest(a = a & 8 + 4 >> 1 - 3 | 7 ^  (2 * 3);, 1);
-    dotest(a = (a * 4) & (1 << 3);, 0);
-    
-    dotest(+a;, 0);
-    dotest(a |= 16;, 16);
-    dotest(-a;, -16);
-    
-    // a is 16
-    dotest(a--;, 16);
-    dotest(a;, 15);
-    dotest(++a;, 16);
-    //dotest(--a;, 15);
-    
-    dotest(a &= 4;, 4);
-    dotest(a = ++a * 5;, 25);
-    dotest(a = 4;, 4);
-    //dotest(a = 5 * a++ + a;, 25);
-    
-    dotest(a = 4;, 4);
-    //dotest(a = 5 * a++;, 20); // Should be 21.
-    dotest(a = 4;, 4);
-    //dotest(a = a++ + ++a;, 10);
-    dotest(a = 4;, 4);
-    //dotest(a = a++;, 5);
-    */
     return(1);
 }
 #undef dotest
