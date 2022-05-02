@@ -19,4 +19,7 @@ Macros used for testing:
 #define dotest(stream, result)\
      lexer = init_stream(#stream);\
      Assert(expr0(&lexer) == (result));
+     
+#define Match(match)\
+     Assert((token = eattoken(&lexer)).kind == match)
 ```
