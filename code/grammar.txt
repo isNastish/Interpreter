@@ -33,18 +33,76 @@
 //       | e
 //
 
-// for_stmt    := 'for' '(' expr? ';' expr? ';' expr?) (('{' stmt_block? '}') | ';') 
-// while_stmt  := 'while' '(' expr ')' (('{' stmt_block? '}') | ';')
-// do_while    := 'do' '{' stmt_block? '}' 'while' '(' expr ')' ';'
-// if_stmt     := 'if' '(' expr ')' (('{' stmt_block? '}') | ';')
-//                ('else' 'if' '(' expr ')' (('{' stmt_block? '}') | ';'))* 
-//                ('else' (('{' stmt_block? '}') | ';'))?
-// switch_smt  := 'switch' '(' expr ')'
-//                (('{' case_stmt* default_stmt? '}' | ';')
-// return_stmt := 'return' '(' expr ')' ';'
+// int_num := 0|[1-9][0-9]*
+//          | 0(X|x)[0-9|a-f|A-F]+
+//          | 0[0-7]+
+//          | 0(B|b)[0-1]+
 
-// case_stmt   := 'case' '(' NUMBER ')' ':' '{' stmt_block? '}' ('break' ';')?
-// default_stmt := 'default' ':' '{' stmt_block? '}' ('break' ';')?
+// float_num := (0|[1-9][0-9]*)(e|.[0-9]*)([E|e](e|+|-)(0|[1-9][0-9]*))?
+//            | (.[0-9]*)([E|e](e|+|-)(0|[1-9][0-9]*))?
 
-// stmt_block := '{'? (expr ';')* '}'?
+// esc_seq := [\n|\r|\a|\b|\f|\t|\v|\\|\?|\'|\"|\ooo|\xhh]
+// char_literal := '\'' (esc_seq|?|"|(^esc_seq)+) '\''
+
+// string_literal := '"' (^")* '"'
+
+// name := [a-z|A-Z|_] [a-z|A-Z|_|0-9]*
+
+// name_list := name (',' name)*
+
+// assign_op := | = | *= | /= | %= | += | -= | <<= | >>= | &= | ^= | |=
+
+// switch_default := 'default' ':' stmt*
+// switch_case := 'case' '('? const_expr ')'? ':' stmt*
+// switch_block := '{' switch_case* switch_default? '}'
+// switch_stmt := 'switch' '(' expr ')' switch_block
+
+// expr_stmt   := expr? ';'
+// for_stmt    := 'for' '(' expr? ';' expr? ';' expr?) stmt_block
+// while_stmt  := 'while' '(' expr ')' stmt_block
+// do_while    := 'do' stmt_block 'while' '(' expr ')' ';'
+
+// if_stmt     := 'if' '(' expr ')' (stmt_block? | ';')
+//                ('else' 'if' '(' expr ')' (stmt_block? | ';'))* 
+//                ('else' (stmt_block? | ';'))?
+
+// break_stmt := 'break' ';'
+
+// continue_stmt := 'continue' ';'
+
+// return_stmt := 'return' ('(' expr ')' | expr?) ';'
+
+// stmt := switch_stmt
+//       | expr_stmt
+//       | comp_stmt
+//       | if_stmt
+//       | while_stmt
+//       | for_stmt
+//       | do_stmt
+//       | goto_stmt
+//       | continue_stmt
+//       | return_stmt
+//       | '{' stmt* '}'
+
+
+// enum_item := name ('=' const_expr)?
+// enum_items := enum_item (',' enum_item)* ','?
+// enum_decl := name '{' enum_items? '}' ';'
+
+// func_param := type name
+// func_param_list := func_param (',' func_param)*
+// func_decl := type name '(' func_param_list? ')' stmt_block
+
+// typedef_decl := type name ';'
+
+// aggregate_decl := TODO
+
+// var_decl := TODO
+
+// decl := 'enum' enum_decl
+//       | 'struct' aggregate_decl
+//       | 'union' aggregate_decl
+//       | var_decl
+//       | 'typedef' typedef_decl
+//       | func_decl
 
