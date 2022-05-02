@@ -15,6 +15,6 @@ Macros that used all over the place:
 - `#define OffsetOf(type, member) ((mem_index)(&((type *)0)->member))`
 
 Macros used for testing 
-- ```#define dotest(stream, result)\
-     lexer = init_stream(#stream);\  
-     Assert(expr0(&lexer) == (result));```
+- ```#define dotest(stream, result)\```
+     ```lexer = init_stream(#stream);\```  
+     ```Assert(expr0(&lexer) == (result));```
