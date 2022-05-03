@@ -4,7 +4,7 @@ The lexer part is done, but it can and probably will be rewritten with FSM in th
 This program is still in development!
 
 The rest of this doc will try to briefly cover the set of macros and important data structures which are used all over the place.
-For complete understanding I suggest you to look in the code.
+For complete understanding and more exhaustive list of things I suggest you to look in the code.
 
 ## Base types
 All basic types used in the program:
