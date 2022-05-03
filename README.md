@@ -82,16 +82,17 @@ typedef struct DynamicArray{
 ## Grammar
 Here is a short subset of a grammar used to write an interpreter.
 For the whole list of grammar look at "grammar.txt" file:
-- `// expr0 := expr1 ;`
-  `// expr1 := expr2 + expr2` 
-  `//        | expr2 - expr2`
-  `//        | expr2 & expr2`
-  `//        | expr2 | expr2`
-  `//        | expr2 ^ expr2`
-  `//        | expr2 << expr2`
-  `//        | expr2 >> expr2`
-  `//        | expr2`
-  `// expr2 := epxr3 * expr3`
+``` C
+// expr0 := expr1 ;
+// expr1 := expr2 + expr2 
+//        | expr2 - expr2
+//        | expr2 & expr2
+//        | expr2 | expr2
+//        | expr2 ^ expr2
+//        | expr2 << expr2
+//        | expr2 >> expr2
+//        | expr2
+// expr2 := epxr3 * expr3
 //        | expr3 / expr3
 //        | expr3 % expr3
 //        | expr3
@@ -101,6 +102,7 @@ For the whole list of grammar look at "grammar.txt" file:
 // expr4 := ( expr1 )
 //        | name
 //        | number
+```
 
 // stmt := expr_stmt
 //       | for_stmt
