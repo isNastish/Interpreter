@@ -78,3 +78,55 @@ typedef struct DynamicArray{
     char arr[1];
 }DynamicArray;
 ```
+
+## Grammar
+Here is a short subset of a grammar used to write an interpreter.
+For the whole list of grammar look at "grammar.txt" file:
+`
+// expr0 := expr1 ;
+// expr1 := expr2 + expr2 
+//        | expr2 - expr2
+//        | expr2 & expr2
+//        | expr2 | expr2
+//        | expr2 ^ expr2
+//        | expr2 << expr2
+//        | expr2 >> expr2
+//        | expr2
+// expr2 := epxr3 * expr3
+//        | expr3 / expr3
+//        | expr3 % expr3
+//        | expr3
+// expr3 := -expr4
+//        | +epxr4
+//        | expr4
+// expr4 := ( expr1 )
+//        | name
+//        | number
+
+// stmt := expr_stmt
+//       | for_stmt
+//       | while_stmt
+//       | do_stmt
+//       | if_stmt
+//       | switch_stmt
+//       | return_stmt
+//       | e
+//
+
+// int_num := 0|[1-9][0-9]*
+//          | 0(X|x)[0-9|a-f|A-F]+
+//          | 0[0-7]+
+//          | 0(B|b)[0-1]+
+
+// float_num := (0|[1-9][0-9]*)(e|.[0-9]*)([E|e](e|+|-)(0|[1-9][0-9]*))?
+//            | (.[0-9]*)([E|e](e|+|-)(0|[1-9][0-9]*))?
+
+// esc_seq := [\n|\r|\a|\b|\f|\t|\v|\\|\?|\'|\"|\ooo|\xhh]
+// char_literal := '\'' (esc_seq|?|"|(^esc_seq)+) '\''
+
+// string_literal := '"' (^")* '"'
+
+// name := [a-z|A-Z|_] [a-z|A-Z|_|0-9]*
+
+// name_list := name (',' name)*
+`
