@@ -80,8 +80,7 @@ typedef struct DynamicArray{
 ```
 
 ## Grammar
-Here is a short subset of a grammar used to write an interpreter.
-For the whole list of grammar look at "grammar.txt" file:
+Here is a short subset of a grammar used to write an interpreter:
 ``` C
 // expr0 := expr1 ;
 // expr1 := expr2 + expr2 
@@ -102,7 +101,6 @@ For the whole list of grammar look at "grammar.txt" file:
 // expr4 := ( expr1 )
 //        | name
 //        | number
-```
 
 // stmt := expr_stmt
 //       | for_stmt
@@ -130,4 +128,4 @@ For the whole list of grammar look at "grammar.txt" file:
 // name := [a-z|A-Z|_] [a-z|A-Z|_|0-9]*
 
 // name_list := name (',' name)*
-`
+```
