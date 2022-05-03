@@ -102,16 +102,6 @@ Here is a short subset of a grammar used to write an interpreter:
 //        | name
 //        | number
 
-// stmt := expr_stmt
-//       | for_stmt
-//       | while_stmt
-//       | do_stmt
-//       | if_stmt
-//       | switch_stmt
-//       | return_stmt
-//       | e
-//
-
 // int_num := 0|[1-9][0-9]*
 //          | 0(X|x)[0-9|a-f|A-F]+
 //          | 0[0-7]+
@@ -128,4 +118,6 @@ Here is a short subset of a grammar used to write an interpreter:
 // name := [a-z|A-Z|_] [a-z|A-Z|_|0-9]*
 
 // name_list := name (',' name)*
+
+// assign_op := | = | *= | /= | %= | += | -= | <<= | >>= | &= | ^= | |=
 ```
