@@ -1,10 +1,9 @@
 # Interpreter
 This is an interpreter for a subset of C programming language. 
+The lexer part is done, but it can and probably will be rewritten with FSM in the future to speed up lexing phase. 
+This program is still in development!
 
-The lexer part is done, but it can and probably will be rewritten with FSM in the future to speed up lexing phase. This program is still in development!
-
-The rest of this doc will try to briefly cover the set of macros and important data structures which are used in the program.
-
+The rest of this doc will try to briefly cover the set of macros and important data structures which are used all over the place.
 For complete understanding I suggest you to look in the code.
 
 ## Base types
