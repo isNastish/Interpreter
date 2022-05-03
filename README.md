@@ -1,4 +1,8 @@
 # Interpreter
+This is an interpreter for a subset of C programming language. The lexer part is done, but it can and probably will be rewritten with FSM in the future to speed up lexing phase. This program is still in development!
+
+The rest of this doc will try to briefly cover the set of macros and important data structures which are used in the program.
+For complete understanding I suggest you to look in the code.
 
 ## Base types
 All basic types used in the program:
@@ -62,4 +66,13 @@ typedef struct Lexer{
     s32 flag;         // additional information for the state.
     s32 error;        // error code
 }Lexer;
+```
+
+Dynamic array data structure:
+``` C
+typedef struct DynamicArray{
+    mem_index len;
+    mem_index cap;
+    char arr[1];
+}DynamicArray;
 ```
