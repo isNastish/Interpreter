@@ -5,8 +5,8 @@
  * February 13, 2022
  */
 
-#if !defined(CLEXER_H)
-#define CLEXER_H
+#if !defined(LEXER_H)
+#define LEXER_H
 
 // NOTE: Not intendet to be complete, just for experiment.
 enum{
@@ -215,4 +215,4 @@ internal void next_nexttoken(Lexer *lexer);
 
 internal b32 is_token(Token token, s32 kind);
 
-#endif // CLEXER_H
+#endif // LEXER_H

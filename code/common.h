@@ -5,8 +5,8 @@
  * February 13, 2022
  */
 
-#if !defined(INTERPRET_H)
-#define INTERPRET_H
+#if !defined(COMMON_H)
+#define COMMON_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -223,4 +223,4 @@ static String string_intern(String **intern_table, char *string){
 #include "test.c"
 #endif
 
-#endif // INTERPRET_H
+#endif // COMMON_H
