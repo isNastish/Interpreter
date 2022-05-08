@@ -191,9 +191,9 @@ static void dlist_print(Dlist *sentinel){
 static void dlist_print(Dlist *sentinel){}
 #endif
 
-#include "cshared.h"
-#include "clexer.h"
-#include "cparser.h"
+#include "string_guard.h"
+#include "lexer.h"
+#include "parser.h"
 
 /* FixMe: Replace intern_table with global symbol HASH TABLE for lexer.
    Or even better make the symbol table a part of lexer data structure. */

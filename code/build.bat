@@ -1,18 +1,33 @@
 
-
 @echo off
 
-set compiler_options=/nologo /FC /TC /Zi /D_DEBUG
-REM set linker_options=
+rem /(E|EP) - copies preprocessor output to standard output.
+rem /F - set stack size.
+rem /Fa - creates as assembly listing file.
+rem /O1 - creates small code.
+rem /O2 - creates fast code.
+rem /Od - disable optimization.
+rem /TC - specifies that all source files are C files.
+rem /TP - specifies that all source files are C++ files.
+rem /w - disable all warnings.
+rem /W0 /W1 /W2 /W3 /W4 - set output warning level.
+rem /Za - disables some C89 language extensions in C code.
+rem /Ze - enables C89 language extensions.
+rem /Zi - generates complete debug information.
+rem /nologo - disable banner.
+rem /FC - display the full path to the source in the error/warning messages.
 
-IF NOT EXIST ..\..\build (mkdir ..\..\build)
+rem -O2 really speeds up the program.
+
+set compiler_options=/nologo /FC /TC /Zi /FC /D_DEBUG
+set linker_options=
+
+if not exist ..\..\build (mkdir ..\..\build)
+
 pushd ..\..\build
 
-REM TEST
-REM cl %compiler_options% ..\cinterpreter\code\test.c %*
-
-REM Application
-cl %compiler_options% ..\cinterpreter\code\interpret.c %*
+cl ^
+ %compiler_options% ..\Interpreter\code\main.c /link %linker_options% %*
 
 popd
 

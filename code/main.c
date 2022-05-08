@@ -5,9 +5,9 @@
  * February 13, 2022
  */
 
-#include "interpret.h"
-#include "clexer.c"
-#include "cparser.c"
+#include "common.h"
+#include "lexer.c"
+#include "parser.c"
 
 int main(int args_count, char **args_values){
     intern_reserved(&intern_table);

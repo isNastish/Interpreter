@@ -5,8 +5,8 @@
  * February 10, 2022
  */
 
-#if !defined(CSHARED_H)
-#define CSHARED_H
+#if !defined(STRING_GUARD_H)
+#define STRING_GUARD_H
 
 // Checks whether the character is ' ', '\t', '\v', '\f', '\r', '\n'.
 internal b32 is_white(char c);
@@ -315,4 +315,4 @@ internal  b32 windows_newline(char c1, char c2){
     return(result);
 }
 
-#endif // CSHARED_H
+#endif // STRING_GUARD_H
