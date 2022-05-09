@@ -195,7 +195,7 @@ internal u64 read_integer(Lexer *lexer, Token *token){
         token->skind = TSK_Hex;
         advance_chars(lexer, 2);
         while(is_hex(lexer->at[0])){
-            u32 digit = hexval(lexer->at[0]);
+            u32 digit = hex_val(lexer->at[0]);
             if(result > ((U64_MAX - digit) / 16)){
                 lexer->error = LError_U64Overflow;
                 break;
@@ -366,7 +366,7 @@ internal void read_string(Lexer *lexer){
     while(lexer->at[0] && (lexer->at[0] != '\"')){
         if(is_newline(lexer->at[0])){
             lexer->error=LError_NLInConst;
-            if(windows_newline(lexer->at[0], lexer->at[1])){
+            if(w32_newline(lexer->at[0], lexer->at[1])){
                 advance_chars(lexer, 1);
             }
         }
@@ -412,7 +412,7 @@ internal void eat_white(Lexer *lexer){
             advance_chars(lexer, 1);
         }
         if(is_newline(lexer->at[0])){
-            if(windows_newline(lexer->at[0], lexer->at[1])){
+            if(w32_newline(lexer->at[0], lexer->at[1])){
                 advance_chars(lexer, 1);
             }
             advance_chars(lexer, 1);
@@ -432,7 +432,7 @@ internal void eat_white(Lexer *lexer){
                 char c = (lexer->at[0]);
                 advance_chars(lexer, 1);
                 if(is_newline(c)){
-                    if(windows_newline(c, lexer->at[0])){
+                    if(w32_newline(c, lexer->at[0])){
                         advance_chars(lexer, 1);
                     }
                     lexer->lastline += 1;
@@ -451,81 +451,81 @@ internal void eat_white(Lexer *lexer){
 // TODO: replace case-statements with macro to reduce the amount of code.
 // Example: Case1('&', '&', '=', TK_And, TK_AndAnd, TK_AndEq);
 
-#define Case1(c1, c2, token1, c3, token2, def_token)\
-case(c1):{\
-if(lexer->at[0] == c2){\
-token.kind = token1;\
-advance_chars(lexer, 1);\
-}\
-else if(lexer->at[0] == c3){\
-token.kind = token2;\
-advance_chars(lexer, 1);\
-}\
-else{\
-token.kind = def_token;\
-}\
-}break;
+#define Case1(c1, c2, token1, c3, token2, def_token)    \
+    case(c1):{                                          \
+        if(lexer->at[0] == c2){                         \
+            token.kind = token1;                        \
+            advance_chars(lexer, 1);                    \
+        }                                               \
+        else if(lexer->at[0] == c3){                    \
+            token.kind = token2;                        \
+            advance_chars(lexer, 1);                    \
+        }                                               \
+        else{                                           \
+            token.kind = def_token;                     \
+        }                                               \
+    }break;
 
-#define Case2(c1, c2, token1, def_token) \
-case(c1):{\
-if(lexer->at[0] == c2){\
-token.kind = token1;\
-advance_chars(lexer, 1);\
-}\
-else{\
-token.kind = def_token;\
-}\
-}break;
+#define Case2(c1, c2, token1, def_token)        \
+    case(c1):{                                  \
+        if(lexer->at[0] == c2){                 \
+            token.kind = token1;                \
+            advance_chars(lexer, 1);            \
+        }                                       \
+        else{                                   \
+            token.kind = def_token;             \
+        }                                       \
+    }break;
 
-#define Case3(c1, c2, token1, c3, token2, c4, token3, def_token)\
-case(c1):{\
-if(lexer->at[0] == c2){\
-token.kind = token1;\
-advance_chars(lexer, 1);\
-}\
-else if(lexer->at[0] == c3){\
-token.kind = token2;\
-advance_chars(lexer, 1);\
-}\
-else if(lexer->at[0] == c4){\
-token.kind = token3;\
-advance_chars(lexer, 1);\
-}\
-else{\
-token.kind = def_token;\
-}\
-}break;
+#define Case3(c1, c2, token1, c3, token2, c4, token3, def_token)    \
+    case(c1):{                                                      \
+        if(lexer->at[0] == c2){                                     \
+            token.kind = token1;                                    \
+            advance_chars(lexer, 1);                                \
+        }                                                           \
+        else if(lexer->at[0] == c3){                                \
+            token.kind = token2;                                    \
+            advance_chars(lexer, 1);                                \
+        }                                                           \
+        else if(lexer->at[0] == c4){                                \
+            token.kind = token3;                                    \
+            advance_chars(lexer, 1);                                \
+        }                                                           \
+        else{                                                       \
+            token.kind = def_token;                                 \
+        }                                                           \
+    }break;
 
-#define Case4(c1, c2, c3, token1, c4, token2, c5, token3, def_token)\
-case(c1):{\
-if((lexer->at[0] == c2) &&\
-(lexer->at[1] == c3)){\
-token.kind = token1;\
-advance_chars(lexer, 2);\
-}\
-else if(lexer->at[0] == c4){\
-token.kind = token2;\
-advance_chars(lexer, 1);\
-}\
-else if(lexer->at[0] == c5){\
-token.kind = token3;\
-advance_chars(lexer, 1);\
-}\
-else{\
-token.kind = def_token;\
-}\
-}break;
+#define Case4(c1, c2, c3, token1, c4, token2, c5, token3, def_token)    \
+    case(c1):{                                                          \
+        if((lexer->at[0] == c2) &&                                      \
+           (lexer->at[1] == c3)){                                       \
+            token.kind = token1;                                        \
+            advance_chars(lexer, 2);                                    \
+        }                                                               \
+        else if(lexer->at[0] == c4){                                    \
+            token.kind = token2;                                        \
+            advance_chars(lexer, 1);                                    \
+        }                                                               \
+        else if(lexer->at[0] == c5){                                    \
+            token.kind = token3;                                        \
+            advance_chars(lexer, 1);                                    \
+        }                                                               \
+        else{                                                           \
+            token.kind = def_token;                                     \
+        }                                                               \
+    }break;
 
-#define Case5(c1, c2, c3, token1, def_token)\
-case(c1):{\
-if((lexer->at[0] == c2) &&\
-(lexer->at[1] == c3)){\
-token.kind = token1;\
-advance_chars(lexer, 2);\
-}\
-else{\
-token.kind = def_token;\
-}\
+#define Case5(c1, c2, c3, token1, def_token)    \
+    case(c1):{                                  \
+        if((lexer->at[0] == c2) &&              \
+           (lexer->at[1] == c3)){               \
+            token.kind = token1;                \
+            advance_chars(lexer, 2);            \
+        }                                       \
+        else{                                   \
+            token.kind = def_token;             \
+        }                                       \
 }break;
 
 internal Token gettoken(Lexer *lexer){
@@ -639,7 +639,7 @@ internal Token gettoken(Lexer *lexer){
                         advance_chars(lexer, 1);
                         while(lexer->at[0] &&
                               !((lexer->at[0] == '*') && (lexer->at[1] == '/'))){
-                            if(windows_newline(lexer->at[0], lexer->at[1]))
+                            if(w32_newline(lexer->at[0], lexer->at[1]))
                                 advance_chars(lexer, 1);
                             if(is_newline(lexer->at[0]))
                                 lexer->lastline += 1;
@@ -648,7 +648,7 @@ internal Token gettoken(Lexer *lexer){
                         if(lexer->at[0] == '*') advance_chars(lexer, 2);
                     }
                     else if(is_newline(c)){
-                        if(windows_newline(c, lexer->at[0]))
+                        if(w32_newline(c, lexer->at[0]))
                             advance_chars(lexer, 1);
                         lexer->lastline += 1;
                         lexer->lastcolumn = 1;

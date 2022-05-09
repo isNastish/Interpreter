@@ -157,13 +157,39 @@ Lexer partially_init_lexer(String contents){
 Lexer init_stream(char *stream){
     String contents;
     contents.data = stream;
-    contents.count = str_len(stream);
+    contents.count = string_len(stream);
     Lexer lexer = {0};
     lexer.lastline = 1;
     lexer.lastcolumn = 1;
     lexer.contents = contents;
     refill(&lexer);
     return(lexer);
+}
+
+#define decl_test(input, match)                        \
+    lexer = init_stream(input);                        \
+    decl = init_decl_parser(&lexer);                   \
+    if(strcmp(decl.final_type, match) == 0){result = 1;}
+
+// DECLARATION TEST.
+b32 test_parse_declarations(void){
+    b32 result = 0;
+    
+    Lexer lexer;
+    Decl decl;
+
+    // TESTS:
+    decl_test("int x;", "x int");
+    //decl_test("char (*funcptr)()", "funcptr function returning char");
+
+    lexer = init_stream("char (*func_ptr)();");
+    decl = init_decl_parser(&lexer);
+
+    if(strcmp(decl.final_type, "func_ptr: function returning char") == 0){
+        result = 1;
+    }
+
+    return(result);
 }
 
 #define dotest(stream, result)\
@@ -237,7 +263,7 @@ b32 test_keywords(void){
         "typedef union{int a; float b;}\r\n"
         "\r\n\r\n"
         "#endif /* KEYWORDS_H */\r\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -425,7 +451,7 @@ b32 test_operators(void){
         "}\n"
         "\n\n"
         "#endif /* OPERATORS_H */\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -637,7 +663,7 @@ b32 test_integers(void){
         "\n"
         //"u64 i26 = 0xr;\n" LError_WrongHexSym;
         "#endif /* INTS_H */\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -814,7 +840,7 @@ b32 test_floats(void){
         "}\n"
         "\n\n"
         "#endif /* FLOATS_H */";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -956,7 +982,7 @@ b32 test_characters(void){
         //"  char c20 = '\\034';\n"
         "\n\n"
         "#endif /* CHAR_H */\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -1151,7 +1177,7 @@ b32 test_strings(void){
         "}\n"
         "\n\n"
         "#endif // STRING_H\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     Token token;
     Lexer lexer = partially_init_lexer(input);
     
@@ -1344,7 +1370,7 @@ b32 test_comments(void){
         "}\n"
         "\n\n"
         "#endif // COMMENTS_H\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -1424,7 +1450,7 @@ b32 test_suffixes(void){
         "float F = 45e-10F;\n"
         "\n"
         "#endif // SUFFIXES_H\n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -1651,7 +1677,7 @@ b32 test_preproc(void){
         "\n"
         "\n"
         "#endif /* PREPROC_H*/ \n";
-    input.count = str_len(input.data);
+    input.count = string_len(input.data);
     
     Token token;
     Lexer lexer = partially_init_lexer(input);
@@ -2073,21 +2099,21 @@ b32 test_preproc(void){
 #include <windows.h>
 #define FAILED_COLOR 0b1100
 #define PASSED_COLOR 0b0010
-#define TEST(test)                                                 \
-printf("%s: ", #test);                                         \
-if(test()){                                                    \
-SetConsoleTextAttribute(console, PASSED_COLOR);            \
-printf("passed!\n");                                       \
+#define TEST(test)                                             \
+    printf("%s: ", #test);                                     \
+    if(test()){                                                \
+        SetConsoleTextAttribute(console, PASSED_COLOR);        \
+        printf("passed!\n");                                   \
+    }                                                          \
+    else{                                                      \
+        SetConsoleTextAttribute(console, FAILED_COLOR);        \
+        printf("failed!\n");                                   \
 }                                                              \
-else{                                                          \
-SetConsoleTextAttribute(console, FAILED_COLOR);            \
-printf("failed!\n");                                       \
-}                                                              \
-SetConsoleTextAttribute(console, console_info.wAttributes);
+    SetConsoleTextAttribute(console, console_info.wAttributes);
 
 
-#define CONSOLE_INFO                                \
-CONSOLE_SCREEN_BUFFER_INFO console_info = {0};  \
-HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);   \
-GetConsoleScreenBufferInfo(console, &console_info);
+#define CONSOLE_INFO                                    \
+    CONSOLE_SCREEN_BUFFER_INFO console_info = {0};      \
+    HANDLE console = GetStdHandle(STD_OUTPUT_HANDLE);   \
+    GetConsoleScreenBufferInfo(console, &console_info);
 

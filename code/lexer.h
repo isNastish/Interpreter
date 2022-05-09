@@ -57,7 +57,7 @@ typedef enum TokenKind{
     TK_Tilde = '~',
     TK_Plus = '+',
     TK_Minus = '-',
-    TK_Mul = '*',  // Ambiguous token kind.
+    TK_Mul = '*',  // TODO: Should be renamed to TK_Star.
     TK_Div = '/',
     TK_Mod = '%',
     TK_PPslash = '\\',
