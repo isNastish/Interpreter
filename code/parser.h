@@ -4,6 +4,74 @@
 #if !defined(PARSER_H)
 #define PARSER_H
 
+#define darr(x)
+
+typedef enum DeclType{
+    DT_FuncDecl,
+    DT_VarDecl,
+    DT_EnumDecl,
+    DT_StructDecl,
+    DT_UnionDecl,
+    DT_TypedefDecl,
+}DeclType;
+
+typedef enum FuncLinkageType{
+    FLT_Static,
+    FLT_Extern, // by default.
+}FuncLinkageType;
+
+typedef struct Decl Decl;
+typedef struct FuncDecl FuncDecl;
+typedef struct VarDecl VarDecl;
+typedef struct StructDecl StructDecl;
+typedef struct UnionDecl UnionDecl;
+typedef struct TypedefDecl TypedefDecl;
+typedef struct EnumDecl EnumDecl;
+
+typedef struct FuncDeclParam FuncDeclParam;
+struct FuncDeclParam { String name; String type; };
+struct FuncDecl{
+    String return_type;
+
+    darr(FuncDeclParam *params;)
+
+    union{
+        f64 F64;
+        u64 U64;
+        
+        // etc...
+    }return_value;
+
+    FuncLinkageType linkage_type;
+};
+
+struct VarDecl{
+    String type;
+
+    union{
+        f64 F64;
+        u64 U64;
+        String string;
+    }value;
+};  
+
+struct Decl{
+    String source;
+    u32 line_number;
+    u32 column_number;
+
+    String name;
+    DeclType type;
+    union{
+        FuncDecl func_decl;
+        VarDecl var_decl;
+        //EnumDecl enum_decl;
+        //StructDecl struct_decl;
+        //UnionDecl union_decl;
+        //TypedefDecl typedef_decl;   
+    };
+};
+
 //
 // EBNF Grammar:
 //
@@ -32,9 +100,15 @@
 // c_singleline_comment := // (^\n)* \n
 // c_comment := c_multiline_comment | c-singleline_comment
 
-// base_type := (void|char|short|int|long|unsigned|signed|double)
-// storage_class_specifier := (static | extern)
-// type_qualifier := (const | volatile)
+// linkage_type := (static|extern)
+
+// name_list := name (',' name)*
+
+// type_list := type (',' type)*
+
+// type_specifier := (char|short|int|long|float|double|signed|unsigned)
+// type_qualifier := (const|volatile)
+// type := type_qualifier? type_specifier
  
 // enum_iterm := name '=' expr0
 // enum_items := enum_item (',' enum_iterm)*
@@ -48,83 +122,36 @@ union x; // union definition.
 union x{f64 F64; u64 U64; char *string;}; // union declaration.
 union {f64 F64; u64 U64; char *string;}; // anonimus union.
 
-struct outter_struct1
-{
-    f32 F32;
-    struct inner_struct1
-    {
-        u32 x1, x2;
-        char *name1;
-        char *name2;
-        f32 arr[10];
-    };
-
-    struct inner_struct2
-    {
-        u32 count_of_pointer;
-        void (*func_ptr1)(u32 param1, u32 param2);
-        void (*func_ptr2)(char *param1, struct outter_struct1 *param2);
-    };
-
-    union // anonimus union.
-    {
-        f64 F64;
-        u64 U64;
-        char *string;
-    };
-
-    struct outter_struct2
-    {
-        char *param1;
-        void *(*another_func_ptr)(u32 param1, u32 param2);
-        struct deep_nested_struct
-        {
-            union deeper_nested_union
-            {
-                void (*another_ptr)();
-
-                // an array of pointers to function name(u32, f32, f32) returning int.
-                int (*x[3])(u32 param1, f32 param2, f32 param3); 
-            };
-            
-            char *param2;
-            char *param3;
-            void *memory;
-            u32 some_bytes[]; // Zero-sized array can be only in the end.
-        };
-    };
-    
-};
-
-
-typedef struct Decl{
-    String source;
-    u32 line_number;
-    u32 column_number;
-    char name[512];
-    char data_type[32]; // declaration data type (int|short|char...).
-    char type[512]; // full type, like (function returning int).
-    char final_type[512];
-}Decl;
-
-// param_list := type name (',' type name)*
-// direct_decl := name
-//              | '(' decl ')'
-//              | direct_decl '(' param_list? ')'
-//              | direct_decl '[ const_expr? ']'
-
-// decl := (*)* direct_decl
-internal Decl init_decl_parser(Lexer *lexer);
-internal void parse_decl(Lexer *lexer, Decl *decl);
-internal void parse_direct_decl(Lexer *lexer, Decl *decl);
-
 //struct_declaration_list := struct_or_union_decl
 //                          | struct_declaration_list
 // struct_or_union_decl := (struct|union) name? '{' struct_declaration_list '}' ';'
 //                       | (struct|union) name ';'
 
-// decl := struct_or_union_decl
+
+//
+// TODO: Grammar for functions is not complete.
+//
+
+// func_param := type name 
+// func_param_list := func_param (',' func_param)*
+// func_name := name
+// func_return_type := (int_number | float_number)
+// func_decl := func_return_type func_name '(' func_param_list? ')' '{' stmt_block '}'
+
+// var_direct_decl := name
+//                  | '(' var_decl1 ')
+//                  | var_direc_decl '[' const_expr ']'
+// var_decl1 := (*)* var_direct_decl
+// var_decl := type var_decl1 ('=' expr0)? ';'
+internal void parse_decl(Lexer *lexer, Decl *decl);
+internal void parse_direct_decl(Lexer *lexer, Decl *decl);
+
+// decl := func_decl
+//       | var_decl
+//       | struct_decl
+//       | union_decl
 //       | enum_decl
+//       | typedef_decl
 
 // expr0 := expr1 + expr1
 //        | expr1 - expr1
@@ -153,5 +180,8 @@ internal s64 expr1(Lexer *lexer);
 internal s64 expr2(Lexer *lexer);
 internal s64 expr3(Lexer *lexer);
 internal s64 expr4(Lexer *lexer);
+
+
+
 
 #endif // PARSER_H

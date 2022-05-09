@@ -5,11 +5,31 @@
  * February 16, 2022
  */
 
-internal s64 expr0(Lexer *lexer);
-internal s64 expr1(Lexer *lexer);
-internal s64 expr2(Lexer *lexer);
-internal s64 expr3(Lexer *lexer);
-internal s64 expr4(Lexer *lexer);
+
+internal b32 is_type_specifier(Lexer *lexer){
+    b32 result = 0;
+    
+    if(is_token(lexer->token, TK_Void)){ result = 1; }
+    else if(is_token(lexer->token, TK_Char)){ result = 1; }
+    else if(is_token(lexer->token, TK_Short)){ result = 1; }
+    else if(is_token(lexer->token, TK_Int)){ result = 1; }
+    else if(is_token(lexer->token, TK_Long)){ result = 1; }
+    else if(is_token(lexer->token, TK_Unsigned)){ result = 1; }
+    else if(is_token(lexer->token, TK_Signed)){ result = 1; }
+    else if(is_token(lexer->token, TK_Float)){ result = 1; }
+    else if(is_token(lexer->token, TK_Double)){ result = 1; }
+    
+    return(result);
+}
+
+internal b32 is_type_qualifier(Lexer *lexer){
+    b32 result = 0;
+
+    if(is_token(lexer->token, TK_Const)){ result = 1; }
+    else if(is_token(lexer->token, TK_Volatile)) { result = 1; }
+    
+    return(result);
+}
 
 // expr0 := epxr1 ;
 internal s64 expr0(Lexer *lexer){
@@ -145,65 +165,20 @@ internal s64 expr4(Lexer *lexer){
     return(result);
 }
 
-internal b32 is_type_specifier(Lexer *lexer){
-    b32 result = 0;
-    
-    //
-    // TODO: deal with TK_Void (from the parser side).
-    //
-    
-    if(is_token(lexer->token, TK_Char)){result = 1;}
-    else if(is_token(lexer->token, TK_Short)){result = 1;}
-    else if(is_token(lexer->token, TK_Int)){result = 1;}
-    else if(is_token(lexer->token, TK_Long)){result = 1;}
-    else if(is_token(lexer->token, TK_Unsigned)){result = 1;}
-    else if(is_token(lexer->token, TK_Signed)){result = 1;}
-    else if(is_token(lexer->token, TK_Float)){result = 1;}
-    else if(is_token(lexer->token, TK_Double)){result = 1;}
-    
-    return(result);
-}
-
-// decl := (*)* direct_decl
-internal Decl init_decl_parser(Lexer *lexer){
-    Decl decl = {0};
-    
-    decl.source = lexer->source;
-    decl.line_number = lexer->lastline;
-    decl.column_number = lexer->lastcolumn;
-
-    nexttoken(lexer);
-    if(is_type_specifier(lexer)){
-        strncpy(decl.data_type,
-                lexer->token.u.intern.data,
-                lexer->token.u.intern.count);
-    }
-    
-    parse_decl(lexer, &decl);
-
-    // NOTE: forming final description.
-    strcpy(decl.final_type, decl.name);
-    strcat(decl.final_type, ": ");
-    if(*decl.type){
-        strcat(decl.final_type, decl.type);
-    }
-    strcat(decl.final_type, decl.data_type);
-
-    return(decl);
-}
-
 internal void parse_decl(Lexer *lexer, Decl *decl){
-    s32 count_stars = 0;
-    for(nexttoken(lexer);
+    // NOTE: type has already been consumed by the lexer.
+    s32 count_of_stars_in_declaration = 0;
+    for(next_token(lexer);
         is_token(lexer->token, TK_Mul);
         nexttoken(lexer)){
-        ++count_stars;
+        ++count_of_stars_in_declaration;
     }
+
     parse_direct_decl(lexer, decl);
-    
-    while(count_stars){
-        strcat(decl->type, " pointer to");
-        --count_stars;
+
+    // TODO: do something with stars.
+    while(count_of_stars_in_declaration > 0){
+        --count_of_stars_in_declaration;
     }
 }
 
@@ -211,45 +186,21 @@ internal void parse_direct_decl(Lexer *lexer, Decl *decl){
     if(is_token(lexer->token, TK_OpenParen)){
         parse_decl(lexer, decl);
         if(is_token(lexer->token, TK_CloseParen)){
-            nexttoken(lexer); 
+            next_token(lexer);
         }
         else{
-            // TODO: error handling.
+            // TODO: error handling, missing ')'.
         }
     }
     else if(is_token(lexer->token, TK_Name)){
-        strncpy(decl->name,
-                lexer->token.u.intern.data,
-                lexer->token.u.intern.count);
-        nexttoken(lexer);
+        s_string_copy(decl->name, lexer->token.lexeme);
     }
     else{
-        // TODO: error handling (expected name or dcl).
+        // TODO: error handling, expected NAME or '('.
     }
 
-    TokenKind kind;
-    while(is_token(lexer->token, TK_OpenParen) ||
-          is_token(lexer->token, TK_OpenBracket)){
-        kind = lexer->token.kind;
-        if(kind == TK_OpenParen){
-            nexttoken(lexer);
-            if(is_token(lexer->token, TK_CloseParen)){
-                strcat(decl->type, " function returning");
-            }
-            else{
-                // TODO: error handling.
-            }
-        }
-        else{ // '['
-            nexttoken(lexer);
-            if(is_token(lexer->token, TK_CloseBracket)){
-                strcat(decl->type, " array[] of");
-            }
-            else{
-                // TODO: error handling.
-            }
-        }
-        nexttoken(lexer);
+    if(is_token(lexer->token, TK_OpenParen)){ // function.
+        // NOTE: parse function parameter list somehow.
     }
 }
 

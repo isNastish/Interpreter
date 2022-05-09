@@ -28,3 +28,4 @@ static String string_intern(String **intern_table, char *string){
     result = string_intern_range(intern_table, string, (string + string_len(string)));
     return(result);
 }
+ 

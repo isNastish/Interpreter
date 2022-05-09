@@ -166,30 +166,8 @@ Lexer init_stream(char *stream){
     return(lexer);
 }
 
-#define decl_test(input, match)                        \
-    lexer = init_stream(input);                        \
-    decl = init_decl_parser(&lexer);                   \
-    if(strcmp(decl.final_type, match) == 0){result = 1;}
-
-// DECLARATION TEST.
 b32 test_parse_declarations(void){
-    b32 result = 0;
-    
-    Lexer lexer;
-    Decl decl;
-
-    // TESTS:
-    decl_test("int x;", "x int");
-    //decl_test("char (*funcptr)()", "funcptr function returning char");
-
-    lexer = init_stream("char (*func_ptr)();");
-    decl = init_decl_parser(&lexer);
-
-    if(strcmp(decl.final_type, "func_ptr: function returning char") == 0){
-        result = 1;
-    }
-
-    return(result);
+    return(0);
 }
 
 #define dotest(stream, result)\
